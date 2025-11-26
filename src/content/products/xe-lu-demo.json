@@ -1,0 +1,27 @@
+{
+  "id": "xe-lu-demo-1",
+  "name": "Xe Lu Rung 10 Tấn - Demo",
+  "slug": "xe-lu-rung-10-tan-demo",
+  "brand": "Demo",
+  "type": "xe-lu",
+  "price": 500000000,
+  "priceText": "Liên hệ",
+  "weightText": "10 tấn",
+  "weight": 10,
+  "length": 5.5,
+  "width": 2.3,
+  "height": 3.2,
+  "dimensions": "5.5m x 2.3m x 3.2m",
+  "thumbnailUrl": "/placeholder.svg",
+  "images": ["/placeholder.svg"],
+  "description": "Xe lu rung chuyên dụng cho công trình xây dựng đường",
+  "isNew": true,
+  "isHot": false,
+  "isHidden": false,
+  "origin": "Việt Nam",
+  "features": [
+    "Động cơ mạnh mẽ",
+    "Hệ thống rung hiện đại",
+    "Cabin điều hòa"
+  ]
+}
