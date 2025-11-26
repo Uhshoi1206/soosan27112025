@@ -1,6 +1,6 @@
 import { BlogPost } from '@/models/BlogPost';
 import { Truck } from '@/models/TruckTypes';
-import { getEnabledTypes, getTypeKeywords } from '@/data/generated/categories';
+import { getEnabledTypes, getTypeKeywords } from '@/lib/generated/categories';
 
 /**
  * Hook để tìm sản phẩm liên quan đến bài viết blog

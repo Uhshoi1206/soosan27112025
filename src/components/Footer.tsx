@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Phone, Mail, MapPin, Facebook, MessageCircle, Youtube } from 'lucide-react';
 import { FaTiktok } from 'react-icons/fa';
 import AddressRegions from './AddressRegions';
-import { addressRegions } from '@/data/addressData';
+import { addressRegions } from '@/lib/constants/addressData';
 import { useToast } from './ui/use-toast';
 import { submitToGoogleSheets, ContactData } from '@/services/googleSheetsService';
-import { getEnabledTypes, getCategoryName } from '@/data/generated/categories';
+import { getEnabledTypes, getCategoryName } from '@/lib/generated/categories';
 
 const Footer: React.FC = () => {
   const { toast } = useToast();

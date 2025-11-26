@@ -3,7 +3,7 @@ import React from 'react';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { VehicleType } from '@/models/TruckTypes';
-import { getEnabledTypes, getCategoryName } from '@/data/generated/categories';
+import { getEnabledTypes, getCategoryName } from '@/lib/generated/categories';
 
 interface VehicleTypeFilterProps {
   selectedType: VehicleType | null;

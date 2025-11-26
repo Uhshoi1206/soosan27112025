@@ -6,17 +6,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from "@/components/ui/checkbox";
-import { 
-  BEFORE_REGISTRATION_FEE_RATE, 
-  REGISTRATION_PLATE_FEES, 
-  ROAD_MAINTENANCE_FEES_TRUCK, 
-  ROAD_MAINTENANCE_FEES_TRACTOR, 
-  INSPECTION_FEE_DATA, 
-  CIVIL_LIABILITY_INSURANCE_FEES_PRE_VAT, 
-  PHYSICAL_INSURANCE_RATE, 
-  PROVINCES, 
-  VAT_RATE 
-} from '@/data/feeData';
+import {
+  BEFORE_REGISTRATION_FEE_RATE,
+  REGISTRATION_PLATE_FEES,
+  ROAD_MAINTENANCE_FEES_TRUCK,
+  ROAD_MAINTENANCE_FEES_TRACTOR,
+  INSPECTION_FEE_DATA,
+  CIVIL_LIABILITY_INSURANCE_FEES_PRE_VAT,
+  PHYSICAL_INSURANCE_RATE,
+  PROVINCES,
+  VAT_RATE
+} from '@/lib/constants/feeData';
 import { formatPrice } from '@/lib/utils';
 import { formatCurrencyInput, parseCurrencyInput } from '@/utils/formatUtils';
 

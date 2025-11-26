@@ -2,7 +2,7 @@ import React from 'react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { VehicleType } from '@/models/TruckTypes';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { getEnabledTypes, getCategoryName } from '@/data/generated/categories';
+import { getEnabledTypes, getCategoryName } from '@/lib/generated/categories';
 
 interface VehicleTypeTabsProps {
   selectedType: VehicleType;

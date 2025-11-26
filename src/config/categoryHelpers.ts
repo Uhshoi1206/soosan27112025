@@ -6,7 +6,7 @@
  */
 
 import type { VehicleType } from '@/models/TruckTypes';
-import type { CategoryData } from '@/data/generated/categories';
+import type { CategoryData } from '@/lib/generated/categories';
 import {
   getVisibleCategories,
   getAllCategories as getAllCategoriesFromContent,

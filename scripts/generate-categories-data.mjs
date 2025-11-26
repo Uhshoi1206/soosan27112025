@@ -9,7 +9,7 @@ import { readdir, readFile, writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 
 const CATEGORIES_DIR = 'src/content/categories';
-const OUTPUT_FILE = 'src/data/generated/categories.ts';
+const OUTPUT_FILE = 'src/lib/generated/categories.ts';
 
 async function generateCategoriesData() {
   console.log('🔍 Loading categories from', CATEGORIES_DIR);
@@ -89,7 +89,7 @@ export function filterVisibleTrucks<T extends { type: string; isHidden?: boolean
 `;
 
   // Create directory if not exists
-  await mkdir('src/data/generated', { recursive: true });
+  await mkdir('src/lib/generated', { recursive: true });
 
   // Write file
   await writeFile(OUTPUT_FILE, tsContent, 'utf-8');

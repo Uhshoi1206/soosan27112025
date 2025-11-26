@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Truck, getBoxTypeName, getTrailerTypeName } from '@/models/TruckTypes';
-import { getCategoryName } from '@/data/generated/categories';
+import { getCategoryName } from '@/lib/generated/categories';
 import { Button } from '@/components/ui/button';
 import { useCompare } from '@/contexts/CompareContextAstro';
 import { X, Trash2 } from 'lucide-react';

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { AddressRegion, AddressInfo } from '@/data/addressData';
+import { AddressRegion, AddressInfo } from '@/lib/constants/addressData';
 import { MapPin } from 'lucide-react';
 
 interface AddressRegionsProps {

@@ -124,6 +124,7 @@ const CatalogPage: React.FC<CatalogPageProps> = ({ initialVehicles }) => {
             filters={filters}
             onFilterChange={handleFilterChange}
             onResetFilters={handleResetFilters}
+            vehicles={filteredVehicles}
           />
         </aside>
 
