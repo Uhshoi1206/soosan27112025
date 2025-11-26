@@ -1,22 +1,8 @@
 
 import { Truck, VehicleType } from '@/models/TruckTypes';
-import { trucks } from '@/data/products';
 
-// Tính toán giá trị tối đa của tải trọng từ dữ liệu xe
-const calculateMaxWeight = (): number => {
-  let maxWeight = 0;
-  trucks.forEach(truck => {
-    if (truck.weight > maxWeight) {
-      maxWeight = truck.weight;
-    }
-  });
-  
-  // Làm tròn lên 5 tấn gần nhất
-  return Math.ceil(maxWeight / 5) * 5;
-};
-
-// Lưu trữ giá trị tối đa
-const MAX_WEIGHT = 100; // Thay đổi từ giá trị tính toán thành cố định 100 tấn
+// Lưu trữ giá trị tối đa tải trọng
+const MAX_WEIGHT = 100;
 
 export const useVehicleFiltering = (vehicles: Truck[], selectedType: VehicleType | null, filters: {
   brand: string | null;

@@ -1,15 +1,17 @@
 
 import { BlogPost } from '@/models/BlogPost';
-import { allBlogPosts } from '@/data/blog-posts';
 import { Truck } from '@/models/TruckTypes';
 import { getTypeKeywords } from '@/data/generated/categories';
 
 /**
  * Hook để tìm bài viết liên quan đến sản phẩm xe
  * Dựa vào tên xe, thương hiệu, loại xe và mô tả
+ *
+ * @param truck - Sản phẩm xe cần tìm bài viết liên quan
+ * @param allBlogPosts - Danh sách tất cả bài viết (lấy từ Content Collections)
  */
-const useRelatedBlogForTruck = (truck: Truck): BlogPost[] => {
-  if (!truck) return [];
+const useRelatedBlogForTruck = (truck: Truck, allBlogPosts: BlogPost[]): BlogPost[] => {
+  if (!truck || !allBlogPosts || allBlogPosts.length === 0) return [];
 
   const relatedPosts: { post: BlogPost; score: number }[] = [];
 

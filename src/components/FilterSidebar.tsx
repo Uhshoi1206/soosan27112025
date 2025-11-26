@@ -5,7 +5,7 @@ import { Button } from './ui/button';
 import { Separator } from './ui/separator';
 import { Filter, Search } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
-import { TruckFilters } from '@/models/TruckTypes';
+import { TruckFilters, Truck } from '@/models/TruckTypes';
 import { VehicleTypeFilter } from './filters/VehicleTypeFilter';
 import { BrandFilter } from './filters/BrandFilter';
 import { PriceFilter } from './filters/PriceFilter';
@@ -16,6 +16,7 @@ interface FilterSidebarProps {
   onFilterChange?: (key: keyof TruckFilters | TruckFilters, value?: any) => void;
   onResetFilters?: () => void;
   className?: string;
+  vehicles: Truck[]; // Nhận danh sách xe từ props để truyền vào BrandFilter
 }
 
 const defaultFilters: TruckFilters = {
@@ -32,7 +33,8 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
   filters = defaultFilters,
   onFilterChange = () => {},
   onResetFilters = () => {},
-  className = ""
+  className = "",
+  vehicles
 }) => {
   const [localFilters, setLocalFilters] = useState<TruckFilters>(filters);
   const [priceRange, setPriceRange] = useState<number[]>([0, 1000000000]);
@@ -161,6 +163,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
         <BrandFilter
           selectedBrand={localFilters.brand}
           onBrandChange={(value) => handleFilterChange('brand', value)}
+          vehicles={vehicles}
         />
 
         <Separator />

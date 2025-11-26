@@ -1,11 +1,17 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { notifications, getProductNameById, getProductUrlById } from '../data/notificationData';
 import { Check, X } from 'lucide-react';
 
 interface OrderNotificationProps {
   onOpenQuickContact?: () => void;
 }
+
+// Simplified mock notifications
+const mockNotifications = [
+  { id: 1, customerName: 'Anh Nguyễn Văn Hùng', phone: '0901234***', productName: 'Xe Tải Hyundai Porter H150', productUrl: '/xe-tai/hyundai-porter-h150-1-5-tan', timestamp: Date.now() - 3600000 },
+  { id: 2, customerName: 'Chị Trần Thị Lan', phone: '0987654***', productName: 'Xe Cẩu Soosan SCS525', productUrl: '/xe-cau/soosan-scs525', timestamp: Date.now() - 7200000 },
+  { id: 3, customerName: 'Công ty TNHH Vận Tải Phương Đông', phone: '0961234***', productName: 'Xe Đầu Kéo Hyundai Xcient', productUrl: '/dau-keo/hyundai-xcient-dau-keo', timestamp: Date.now() - 10800000 },
+];
 
 const OrderNotification: React.FC<OrderNotificationProps> = ({ onOpenQuickContact }) => {
   const [currentNotificationIndex, setCurrentNotificationIndex] = useState(0);
@@ -40,7 +46,7 @@ const OrderNotification: React.FC<OrderNotificationProps> = ({ onOpenQuickContac
       // Sau khi ẩn, đợi 20 giây và hiển thị thông báo tiếp theo
       const nextTimeout = setTimeout(() => {
         // Chuyển sang thông báo tiếp theo
-        setCurrentNotificationIndex((prevIndex) => (prevIndex + 1) % notifications.length);
+        setCurrentNotificationIndex((prevIndex) => (prevIndex + 1) % mockNotifications.length);
         showNextNotification();
       }, 20000);
       
@@ -58,11 +64,8 @@ const OrderNotification: React.FC<OrderNotificationProps> = ({ onOpenQuickContac
     setDismissed(true);
   };
 
-  const currentNotification = notifications[currentNotificationIndex];
+  const currentNotification = mockNotifications[currentNotificationIndex];
   if (!currentNotification || !isVisible) return null;
-
-  const productName = getProductNameById(currentNotification.productId);
-  const productUrl = getProductUrlById(currentNotification.productId);
   
   // Định dạng thời gian
   const formatTimeAgo = (timestamp: number) => {
@@ -98,9 +101,9 @@ const OrderNotification: React.FC<OrderNotificationProps> = ({ onOpenQuickContac
       }`}
     >
       <a
-        href={productUrl}
+        href={currentNotification.productUrl}
         className="block bg-white rounded-lg shadow-lg p-4 border-l-4 border-primary relative overflow-hidden group cursor-pointer hover:shadow-xl transition-shadow duration-300"
-        aria-label={`Xem chi tiết sản phẩm ${productName}`}
+        aria-label={`Xem chi tiết sản phẩm ${currentNotification.productName}`}
       >
         {/* Hiệu ứng gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-transparent to-primary/5 pointer-events-none" />
@@ -129,7 +132,7 @@ const OrderNotification: React.FC<OrderNotificationProps> = ({ onOpenQuickContac
               {currentNotification.customerName} - <span className="text-primary font-bold">{currentNotification.phone}</span>
             </p>
             <p className="mt-1 text-sm text-gray-600">
-              Vừa đặt mua <span className="font-semibold text-primary">{productName}</span>
+              Vừa đặt mua <span className="font-semibold text-primary">{currentNotification.productName}</span>
             </p>
             <p className="mt-1 text-xs text-gray-500">
               {formatTimeAgo(currentNotification.timestamp)}

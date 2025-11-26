@@ -2,13 +2,13 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Layout from '../../components/Layout.tsx';
 import { OptimizedImage } from '../../components/ui/optimized-image.tsx';
-import { trucks } from '../../data/products';
-import { getCategoryName } from '../../config/categoryHelpers';
+import { getVisibleProducts, getCategoryById } from '../../utils/contentCollections';
 import ProductDetailTabs from '../../components/TruckDetail/ProductDetailTabs.tsx';
 import TruckItem from '../../components/TruckItem.tsx';
 import TruckActions from '../../components/TruckDetail/TruckActions.tsx';
 
 export async function getStaticPaths() {
+  const trucks = await getVisibleProducts();
   return trucks.map((truck) => ({
     params: { slug: truck.slug },
     props: { truck },
@@ -17,7 +17,8 @@ export async function getStaticPaths() {
 
 const { truck } = Astro.props;
 
-const relatedTrucks = trucks
+const allTrucks = await getVisibleProducts();
+const relatedTrucks = allTrucks
   .filter(t =>
     (t.brand === truck.brand ||
      Math.abs(t.weight - truck.weight) < 2) &&
@@ -25,7 +26,8 @@ const relatedTrucks = trucks
   )
   .slice(0, 4);
 
-const categoryName = await getCategoryName(truck.type);
+const category = await getCategoryById(truck.type);
+const categoryName = category?.data.name || truck.type;
 ---
 
 <BaseLayout
