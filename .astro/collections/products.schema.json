@@ -1,0 +1,311 @@
+{
+  "$ref": "#/definitions/products",
+  "definitions": {
+    "products": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "brand": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "type": {
+          "type": "string"
+        },
+        "price": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "priceText": {
+          "type": "string"
+        },
+        "weightText": {
+          "type": "string"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "length": {
+          "type": "number"
+        },
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        },
+        "dimensions": {
+          "type": "string"
+        },
+        "thumbnailUrl": {
+          "type": "string"
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "isNew": {
+          "type": "boolean"
+        },
+        "isHot": {
+          "type": "boolean"
+        },
+        "isHidden": {
+          "type": "boolean",
+          "default": false
+        },
+        "origin": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "detailedDescription": {
+          "type": "string"
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "engineModel": {
+          "type": "string"
+        },
+        "engineCapacity": {
+          "type": "string"
+        },
+        "enginePower": {
+          "type": "string"
+        },
+        "engineTorque": {
+          "type": "string"
+        },
+        "emissionStandard": {
+          "type": "string"
+        },
+        "engineType": {
+          "type": "string"
+        },
+        "fuel": {
+          "type": "string"
+        },
+        "transmission": {
+          "type": "string"
+        },
+        "transmissionType": {
+          "type": "string"
+        },
+        "clutchType": {
+          "type": "string"
+        },
+        "wheelbase": {
+          "type": "number"
+        },
+        "wheelbaseText": {
+          "type": "string"
+        },
+        "insideDimension": {
+          "type": "string"
+        },
+        "groundClearance": {
+          "type": "number"
+        },
+        "wheelTrack": {
+          "type": "string"
+        },
+        "turningRadius": {
+          "type": "number"
+        },
+        "grossWeight": {
+          "type": "string"
+        },
+        "kerbWeight": {
+          "type": "string"
+        },
+        "frontAxleLoad": {
+          "type": "string"
+        },
+        "rearAxleLoad": {
+          "type": "string"
+        },
+        "maxSpeed": {
+          "type": "string"
+        },
+        "climbingAbility": {
+          "type": "string"
+        },
+        "fuelConsumption": {
+          "type": "string"
+        },
+        "chassisMaterial": {
+          "type": "string"
+        },
+        "frontSuspension": {
+          "type": "string"
+        },
+        "rearSuspension": {
+          "type": "string"
+        },
+        "suspensionType": {
+          "type": "string"
+        },
+        "brakeSystem": {
+          "type": "string"
+        },
+        "frontBrake": {
+          "type": "string"
+        },
+        "rearBrake": {
+          "type": "string"
+        },
+        "parkingBrake": {
+          "type": "string"
+        },
+        "brakingSystem": {
+          "type": "string"
+        },
+        "steeringSystem": {
+          "type": "string"
+        },
+        "steeringType": {
+          "type": "string"
+        },
+        "tires": {
+          "type": "string"
+        },
+        "cabinType": {
+          "type": "string"
+        },
+        "seats": {
+          "type": "number"
+        },
+        "cabinFeatures": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "boxType": {
+          "type": "string",
+          "enum": [
+            "đông-lạnh",
+            "bảo-ôn",
+            "kín",
+            "bạt",
+            "lửng",
+            "xi-téc"
+          ]
+        },
+        "craneType": {
+          "type": "string",
+          "enum": [
+            "cẩu-rời",
+            "cẩu-gắn-xe"
+          ]
+        },
+        "trailerType": {
+          "type": "string",
+          "enum": [
+            "ben",
+            "sàn",
+            "sàn-rút",
+            "lùn",
+            "cổ-cò",
+            "xương",
+            "lửng",
+            "rào",
+            "xi-téc",
+            "bồn-xi-măng",
+            "bồn-sắt",
+            "bồn-bột-mì"
+          ]
+        },
+        "coolingBox": {
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "insulatedBox": {
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "closedBox": {
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "tarpaulinBox": {
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "flatbedBox": {
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "tankSpec": {
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "craneSpec": {
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "trailerSpec": {
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "tractorSpec": {
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "specifications": {
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "order": {
+          "type": "number"
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "slug",
+        "brand",
+        "type",
+        "weightText",
+        "weight",
+        "length",
+        "width",
+        "height",
+        "dimensions",
+        "thumbnailUrl",
+        "images"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}
