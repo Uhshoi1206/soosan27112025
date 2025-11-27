@@ -46,19 +46,29 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
       try {
         // Try to get data from window object (injected by Astro)
         if ((window as any).__SEARCH_DATA__) {
+          console.log('[SearchDropdown] Using cached search data');
           setSearchData((window as any).__SEARCH_DATA__);
           return;
         }
 
         // Fallback: fetch from API
+        console.log('[SearchDropdown] Fetching search data from API...');
         const response = await fetch('/api/search-data.json');
+        console.log('[SearchDropdown] API response status:', response.status);
+
         if (response.ok) {
           const data = await response.json();
+          console.log('[SearchDropdown] Loaded data:', {
+            products: data.products?.length || 0,
+            blogs: data.blogs?.length || 0
+          });
           setSearchData(data);
           (window as any).__SEARCH_DATA__ = data;
+        } else {
+          console.error('[SearchDropdown] API returned non-OK status:', response.status);
         }
       } catch (error) {
-        console.error('Failed to load search data:', error);
+        console.error('[SearchDropdown] Failed to load search data:', error);
       }
     };
 
@@ -85,6 +95,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
       }
 
       if (!searchData) {
+        console.log('[SearchDropdown] Search data not loaded yet');
         setIsLoading(true);
         return;
       }
@@ -94,10 +105,12 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
 
       try {
         const query = removeVietnameseTones(searchTerm.trim());
+        console.log('[SearchDropdown] Searching for:', { original: searchTerm, normalized: query });
         const foundResults: SearchResult[] = [];
 
         // Search products
         if (searchData.products) {
+          console.log('[SearchDropdown] Searching in', searchData.products.length, 'products');
           searchData.products.forEach((product: any) => {
             const name = removeVietnameseTones(product.name || '');
             const brand = removeVietnameseTones(product.brand || '');
@@ -121,6 +134,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
 
         // Search blogs
         if (searchData.blogs) {
+          console.log('[SearchDropdown] Searching in', searchData.blogs.length, 'blogs');
           searchData.blogs.forEach((blog: any) => {
             const title = removeVietnameseTones(blog.title || '');
             const description = removeVietnameseTones(blog.description || '');
@@ -149,9 +163,10 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
           return 0;
         });
 
+        console.log('[SearchDropdown] Found', foundResults.length, 'results');
         setResults(foundResults.slice(0, 10));
       } catch (error) {
-        console.error('Search error:', error);
+        console.error('[SearchDropdown] Search error:', error);
         setResults([]);
       } finally {
         setIsLoading(false);

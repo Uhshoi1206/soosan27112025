@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { getVisibleProducts } from '../../utils/contentCollections';
 import { getCollection } from 'astro:content';
 
-export const prerender = true;
+export const prerender = false;
 
 export const GET: APIRoute = async () => {
   try {
@@ -35,14 +35,18 @@ export const GET: APIRoute = async () => {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
-        'Cache-Control': 'public, max-age=3600'
+        'Cache-Control': 'public, max-age=3600',
+        'Access-Control-Allow-Origin': '*'
       }
     });
   } catch (error) {
     console.error('Search data API error:', error);
     return new Response(JSON.stringify({ products: [], blogs: [] }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' }
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      }
     });
   }
 };
