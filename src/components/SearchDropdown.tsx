@@ -97,6 +97,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
       if (!searchData) {
         console.log('[SearchDropdown] Search data not loaded yet');
         setIsLoading(true);
+        setIsOpen(true);
         return;
       }
 
