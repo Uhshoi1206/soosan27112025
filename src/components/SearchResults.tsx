@@ -22,10 +22,18 @@ const removeVietnameseTones = (str: string): string => {
 };
 
 const SearchResults: React.FC<SearchResultsProps> = ({ products, blogPosts, searchQuery }) => {
+  console.log('[SearchResults] Received:', {
+    productsCount: products?.length || 0,
+    blogPostsCount: blogPosts?.length || 0,
+    searchQuery
+  });
+
   const filteredProducts = useMemo(() => {
     if (!searchQuery) return products;
 
     const query = removeVietnameseTones(searchQuery);
+    console.log('[SearchResults] Filtering products with query:', { original: searchQuery, normalized: query });
+
     return products.filter(product => {
       const name = removeVietnameseTones(product.name || '');
       const brand = removeVietnameseTones(product.brand || '');
@@ -55,6 +63,12 @@ const SearchResults: React.FC<SearchResultsProps> = ({ products, blogPosts, sear
   }, [blogPosts, searchQuery]);
 
   const totalResults = filteredProducts.length + filteredBlogPosts.length;
+
+  console.log('[SearchResults] Filtered results:', {
+    productsFound: filteredProducts.length,
+    blogsFound: filteredBlogPosts.length,
+    total: totalResults
+  });
 
   return (
     <div className="space-y-8">
