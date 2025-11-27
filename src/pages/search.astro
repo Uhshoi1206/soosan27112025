@@ -5,7 +5,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import TruckItem from '../components/TruckItem';
-import { Card, CardContent, CardHeader } from '../components/ui/card';
 import { getVisibleProducts } from '../utils/contentCollections';
 import { getCollection } from 'astro:content';
 
@@ -151,10 +150,10 @@ console.log('[search.astro] Search results:', {
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredBlogPosts.map((post) => (
-                <Card className="hover:shadow-lg transition-shadow">
-                  <a href={`/${post.category}/${post.slug}`}>
+                <article class="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+                  <a href={`/${post.category}/${post.slug}`} class="block">
                     {post.image && (
-                      <div class="aspect-video overflow-hidden rounded-t-lg">
+                      <div class="aspect-video overflow-hidden">
                         <img
                           src={post.image}
                           alt={post.title}
@@ -162,12 +161,10 @@ console.log('[search.astro] Search results:', {
                         />
                       </div>
                     )}
-                    <CardHeader>
-                      <h3 class="font-semibold text-lg line-clamp-2 hover:text-primary transition-colors">
+                    <div class="p-6">
+                      <h3 class="font-semibold text-lg line-clamp-2 hover:text-primary transition-colors mb-3">
                         {post.title}
                       </h3>
-                    </CardHeader>
-                    <CardContent>
                       <p class="text-gray-600 text-sm line-clamp-3 mb-4">
                         {post.excerpt || post.description}
                       </p>
@@ -175,9 +172,9 @@ console.log('[search.astro] Search results:', {
                         <span>{new Date(post.publishDate).toLocaleDateString('vi-VN')}</span>
                         <span class="text-primary hover:underline">Đọc thêm →</span>
                       </div>
-                    </CardContent>
+                    </div>
                   </a>
-                </Card>
+                </article>
               ))}
             </div>
           </div>

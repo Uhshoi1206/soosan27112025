@@ -227,6 +227,9 @@ collections:
           - { label: "Xe Cẩu", value: "xe-cau" }
           - { label: "Sơ Mi Rơ Mooc", value: "mooc" }
           - { label: "Xe Đầu Kéo", value: "dau-keo" }
+          - { label: "Xe Cẩu", value: "xe-cau" }
+          - { label: "Sơ Mi Rơ Mooc", value: "mooc" }
+          - { label: "Xe Đầu Kéo", value: "dau-keo" }
           - { label: "Xe Lu", value: "xe-lu" }
 
       # Pricing
