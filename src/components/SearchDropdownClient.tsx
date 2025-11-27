@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Search, FileText, Package } from 'lucide-react';
 import { Input } from './ui/input';
 import { cn } from '@/lib/utils';
+import type { Truck } from '@/models/TruckTypes';
+import type { BlogPost } from '@/models/BlogPost';
 
 interface SearchResult {
   id: string;
@@ -11,21 +13,32 @@ interface SearchResult {
   excerpt?: string;
 }
 
-interface SearchDropdownProps {
+interface SearchDropdownClientProps {
   placeholder?: string;
   className?: string;
   onResultClick?: () => void;
+  products: Truck[];
+  blogPosts: BlogPost[];
 }
 
-const SearchDropdown: React.FC<SearchDropdownProps> = ({
+const removeVietnameseTones = (str: string): string => {
+  return str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+    .toLowerCase();
+};
+
+const SearchDropdownClient: React.FC<SearchDropdownClientProps> = ({
   placeholder = "Tìm kiếm xe, tin tức...",
   className,
-  onResultClick
+  onResultClick,
+  products,
+  blogPosts
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [results, setResults] = useState<SearchResult[]>([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -40,38 +53,69 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const results = useMemo(() => {
+    if (!searchTerm.trim()) return [];
+
+    const query = removeVietnameseTones(searchTerm.trim());
+
+    const productResults = products
+      .filter(product => {
+        const name = removeVietnameseTones(product.name || '');
+        const brand = removeVietnameseTones(product.brand || '');
+        const description = removeVietnameseTones(product.description || '');
+        const model = removeVietnameseTones(product.model || '');
+
+        return name.includes(query) ||
+          brand.includes(query) ||
+          description.includes(query) ||
+          model.includes(query);
+      })
+      .slice(0, 5)
+      .map(product => ({
+        id: product.id,
+        title: product.name,
+        type: 'product' as const,
+        url: `/${product.type}/${product.slug}`,
+        excerpt: product.description?.substring(0, 100)
+      }));
+
+    const blogResults = blogPosts
+      .filter(post => {
+        const title = removeVietnameseTones(post.title || '');
+        const description = removeVietnameseTones(post.description || '');
+        const excerpt = removeVietnameseTones(post.excerpt || '');
+
+        return title.includes(query) ||
+          description.includes(query) ||
+          excerpt.includes(query);
+      })
+      .slice(0, 5)
+      .map(post => ({
+        id: post.slug,
+        title: post.title,
+        type: 'blog' as const,
+        url: `/${post.category}/${post.slug}`,
+        excerpt: post.excerpt?.substring(0, 100) || post.description?.substring(0, 100)
+      }));
+
+    return [...productResults, ...blogResults]
+      .sort((a, b) => {
+        const aExactMatch = removeVietnameseTones(a.title) === query;
+        const bExactMatch = removeVietnameseTones(b.title) === query;
+        if (aExactMatch && !bExactMatch) return -1;
+        if (!aExactMatch && bExactMatch) return 1;
+        return 0;
+      })
+      .slice(0, 10);
+  }, [searchTerm, products, blogPosts]);
+
   useEffect(() => {
-    const searchContent = async () => {
-      if (!searchTerm.trim()) {
-        setResults([]);
-        setIsOpen(false);
-        return;
-      }
-
-      setIsLoading(true);
+    if (searchTerm.trim() && results.length >= 0) {
       setIsOpen(true);
-
-      try {
-        const response = await fetch(`/api/search?q=${encodeURIComponent(searchTerm)}`);
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Search API response:', data);
-          setResults(data.results || []);
-        } else {
-          console.error('Search API error:', response.status, response.statusText);
-          setResults([]);
-        }
-      } catch (error) {
-        console.error('Search error:', error);
-        setResults([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    const timeoutId = setTimeout(searchContent, 300);
-    return () => clearTimeout(timeoutId);
-  }, [searchTerm]);
+    } else {
+      setIsOpen(false);
+    }
+  }, [searchTerm, results.length]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,12 +152,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
 
       {isOpen && searchTerm.trim() && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg max-h-96 overflow-y-auto z-50">
-          {isLoading ? (
-            <div className="p-4 text-center text-gray-500">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto"></div>
-              <p className="mt-2 text-sm">Đang tìm kiếm...</p>
-            </div>
-          ) : results.length > 0 ? (
+          {results.length > 0 ? (
             <div>
               <div className="p-2 text-xs text-gray-500 font-semibold border-b">
                 Tìm thấy {results.length} kết quả
@@ -165,4 +204,4 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
   );
 };
 
-export default SearchDropdown;
+export default SearchDropdownClient;
