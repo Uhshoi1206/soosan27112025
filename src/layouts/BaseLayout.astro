@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import FloatingWidgets from '../components/FloatingWidgets';
+import GlobalSearch from '../components/GlobalSearch.astro';
 
 interface Props {
   title?: string;
@@ -21,11 +22,15 @@ const {
     <meta name="description" content={description} />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <title>{title}</title>
+    <script src="/search-fix.js" defer></script>
   </head>
   <body>
     <slot />
 
     <!-- Floating widgets: QuickContact + OrderNotification -->
     <FloatingWidgets client:load />
+
+    <!-- Global search enhancement -->
+    <GlobalSearch />
   </body>
 </html>
