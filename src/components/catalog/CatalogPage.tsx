@@ -7,9 +7,10 @@ import { useVehicleFiltering } from '@/hooks/useVehicleFiltering';
 
 interface CatalogPageProps {
   initialVehicles: Truck[];
+  initialSearchQuery?: string;
 }
 
-const CatalogPage: React.FC<CatalogPageProps> = ({ initialVehicles }) => {
+const CatalogPage: React.FC<CatalogPageProps> = ({ initialVehicles, initialSearchQuery = '' }) => {
   const [selectedType, setSelectedType] = useState<VehicleType | null>(null);
   const [filters, setFilters] = useState<TruckFilters>({
     brand: null,
@@ -18,7 +19,7 @@ const CatalogPage: React.FC<CatalogPageProps> = ({ initialVehicles }) => {
     minWeight: null,
     maxWeight: null,
     vehicleType: null,
-    search: null
+    search: initialSearchQuery || null
   });
 
   useEffect(() => {
@@ -26,7 +27,7 @@ const CatalogPage: React.FC<CatalogPageProps> = ({ initialVehicles }) => {
       const params = new URLSearchParams(window.location.search);
       const typeParam = params.get('type') as VehicleType | null;
       const brandParam = params.get('brand');
-      const searchParam = params.get('search');
+      const searchParam = params.get('search') || params.get('q');
 
       if (typeParam) {
         setSelectedType(typeParam);
