@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
 import { GitCompare, Calculator, CreditCard } from 'lucide-react';
 import CompareBadge from './CompareBadge';
-import SearchDropdown from './SearchDropdown';
+import SearchBox from './SearchBox';
 import { useCompare } from '@/contexts/CompareContextAstro';
 
 const MobileMenu: React.FC = () => {
@@ -47,9 +47,9 @@ const MobileMenu: React.FC = () => {
           </div>
           
           <div className="mb-6">
-            <SearchDropdown
+            <SearchBox
               placeholder="Tìm kiếm xe, tin tức..."
-              onResultClick={() => setIsOpen(false)}
+              onClose={() => setIsOpen(false)}
             />
           </div>
 

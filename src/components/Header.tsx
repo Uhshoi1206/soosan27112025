@@ -4,7 +4,7 @@ import { Search, Phone, Calculator, CreditCard, GitCompare } from 'lucide-react'
 import { Button } from './ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import MobileMenu from './MobileMenu';
-import SearchDropdown from './SearchDropdown';
+import SearchBox from './SearchBox';
 import {
   Popover,
   PopoverContent,
@@ -99,7 +99,7 @@ const Header: React.FC = () => {
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-96 p-4" align="end">
-                  <SearchDropdown onResultClick={() => setOpen(false)} />
+                  <SearchBox onClose={() => setOpen(false)} />
                 </PopoverContent>
               </Popover>
             ) : (
