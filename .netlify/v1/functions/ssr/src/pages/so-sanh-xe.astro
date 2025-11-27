@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Layout from '../components/Layout.tsx';
+import CompareTable from '../components/compare/CompareTable.tsx';
+import CompareEmptyState from '../components/compare/CompareEmptyState.tsx';
+---
+
+<BaseLayout
+  title="So Sánh Xe | soosanmotor.com"
+  description="So sánh các dòng xe tải, cẩu, mooc, đầu kéo để chọn sản phẩm phù hợp nhất với nhu cầu của bạn."
+>
+  <Layout client:load>
+    <div class="container mx-auto px-4 py-12">
+      <h1 class="text-4xl font-bold text-center mb-4">So Sánh Xe</h1>
+      <p class="text-center text-gray-600 mb-12">
+        Chọn tối đa 3 xe để so sánh chi tiết thông số kỹ thuật và giá cả
+      </p>
+
+      <div id="compare-content">
+        <CompareEmptyState client:load />
+      </div>
+    </div>
+  </Layout>
+</BaseLayout>
+
+<script>
+  // Client-side logic to load compare items from localStorage
+  if (typeof window !== 'undefined') {
+    const compareItems = JSON.parse(localStorage.getItem('xetaiviet_compare_items') || '[]');
+
+    if (compareItems.length > 0) {
+      // Replace empty state with compare table
+      const container = document.getElementById('compare-content');
+      if (container) {
+        // Will be handled by React component with client:load
+      }
+    }
+  }
+</script>

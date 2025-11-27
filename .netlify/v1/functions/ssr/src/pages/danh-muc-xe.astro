@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Layout from '../components/Layout.tsx';
+import CatalogHeader from '../components/catalog/CatalogHeader.tsx';
+import CatalogPage from '../components/catalog/CatalogPage.tsx';
+import { getVisibleProducts } from '../utils/contentCollections';
+
+const visibleTrucks = await getVisibleProducts();
+---
+
+<BaseLayout
+  title="Danh Mục Xe | Xe Tải, Cẩu, Mooc & Đầu Kéo"
+  description="Khám phá danh mục đầy đủ các loại xe tải, xe cẩu, sơ mi rơ mooc, xe đầu kéo từ các thương hiệu uy tín. Giá tốt, chất lượng đảm bảo."
+>
+  <Layout client:load>
+    <div class="container mx-auto px-4 py-8">
+      <CatalogHeader client:load initialVehicleCount={visibleTrucks.length} />
+
+      <CatalogPage client:load initialVehicles={visibleTrucks} />
+    </div>
+  </Layout>
+</BaseLayout>

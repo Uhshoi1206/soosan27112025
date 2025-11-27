@@ -1,0 +1,109 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Layout from '../components/Layout.tsx';
+import Hero from '../components/Hero.tsx';
+import VehicleCarousel from '../components/home/VehicleCarousel.tsx';
+import BrandCategories from '../components/home/BrandCategories.tsx';
+import ContactSection from '../components/home/ContactSection.tsx';
+import BlogSection from '../components/home/BlogSection.tsx';
+import WeightCategories from '../components/home/WeightCategories.tsx';
+import TestimonialSection from '../components/home/TestimonialSection.tsx';
+
+import { getOrganizedProducts, getLegacyBlogData, getVisibleCategories } from '../utils/contentCollections';
+import { getBlogCategories } from '../utils/blogCategories';
+
+const { featuredTrucks, specializedCranes, semiTrailers, tractors, trucks } = await getOrganizedProducts();
+const blogData = await getLegacyBlogData();
+const sortedPosts = blogData.allBlogPosts;
+const { categoryMap, categoryInfoMap } = await getBlogCategories();
+
+const allCategories = await getVisibleCategories();
+const baseKeys = new Set(['xe-tai', 'xe-cau', 'mooc', 'dau-keo']);
+const extraCategories = allCategories.filter(cat => !baseKeys.has(cat.data.id));
+
+// Helper to check if type is enabled
+const isTypeEnabled = (type: string) => {
+  return allCategories.some(cat => cat.data.id === type);
+};
+---
+
+<BaseLayout
+  title="Trang Chủ | soosanmotor.com - Nhà sản xuất sơ mi rơ moóc, cẩu, thùng xe tải đông lạnh, Xe xitéc (bồn) chở xăng dầu, xe chuyên dụng hàng đầu tại Việt Nam"
+  description="Chuyên sản xuất sơ mi rơ moóc, cẩu, thùng xe tải đông lạnh, Xe xitéc (bồn) chở xăng dầu và các loại xe chuyên dụng khác với đa dạng thương hiệu: Soosan, Doosung, Hyundai, Hino, Isuzu, Dongfeng, Chenglong... Giá tốt nhất thị trường!"
+>
+  <Layout client:load>
+    <Hero client:load />
+
+    <div class="w-full overflow-hidden">
+      {isTypeEnabled('xe-tai') && (
+        <VehicleCarousel
+          client:visible
+          vehicles={featuredTrucks}
+          title="Xe Tải"
+          description="Các dòng xe tải được nhiều khách hàng tin dùng, đa dạng tải trọng và thương hiệu"
+          viewAllUrl="/danh-muc-xe?type=xe-tai"
+          viewAllText="Xem tất cả xe tải"
+        />
+      )}
+
+      {isTypeEnabled('xe-cau') && (
+        <VehicleCarousel
+          client:visible
+          vehicles={specializedCranes}
+          title="Cẩu"
+          description="Các dòng xe cẩu chuyên dụng, đa dạng tải trọng và thương hiệu"
+          viewAllUrl="/danh-muc-xe?type=xe-cau"
+          viewAllText="Xem tất cả cẩu"
+        />
+      )}
+
+      {isTypeEnabled('mooc') && (
+        <VehicleCarousel
+          client:visible
+          vehicles={semiTrailers}
+          title="Sơ Mi Rơ Mooc"
+          description="Các dòng mooc chuyên dụng, đa dạng loại và thương hiệu"
+          viewAllUrl="/danh-muc-xe?type=mooc"
+          viewAllText="Xem tất cả sơ mi rơ mooc"
+        />
+      )}
+
+      {isTypeEnabled('dau-keo') && (
+        <VehicleCarousel
+          client:visible
+          vehicles={tractors}
+          title="Xe Đầu Kéo"
+          description="Các dòng xe đầu kéo, đa dạng công suất và thương hiệu"
+          viewAllUrl="/danh-muc-xe?type=dau-keo"
+          viewAllText="Xem tất cả xe đầu kéo"
+        />
+      )}
+
+      {extraCategories.map(cat => (
+        isTypeEnabled(cat.data.id) && (
+          <VehicleCarousel
+            client:visible
+            key={cat.data.id}
+            vehicles={trucks.filter(t => t.type === cat.data.id)}
+            title={cat.data.name}
+            description={cat.data.description || `Các dòng ${cat.data.name.toLowerCase()} chuyên dụng, đa dạng mẫu mã`}
+            viewAllUrl={`/danh-muc-xe?type=${cat.data.id}`}
+            viewAllText={`Xem tất cả ${cat.data.name.toLowerCase()}`}
+          />
+        )
+      ))}
+
+      <div class="bg-gray-50 w-full">
+        <WeightCategories client:visible />
+      </div>
+
+      <BrandCategories client:visible trucks={trucks} />
+
+      <TestimonialSection client:visible products={trucks} />
+
+      <ContactSection client:visible />
+
+      <BlogSection client:visible posts={sortedPosts.slice(0, 6)} categories={categoryMap} categoryInfoMap={categoryInfoMap} />
+    </div>
+  </Layout>
+</BaseLayout>

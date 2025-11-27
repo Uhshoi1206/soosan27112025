@@ -1,0 +1,133 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Layout from '../../components/Layout.tsx';
+import { getVisibleBlogPosts } from '../../utils/contentCollections';
+import { getBlogCategories } from '../../utils/blogCategories';
+import { OptimizedImage } from '../../components/ui/optimized-image.tsx';
+import TableOfContents from '../../components/blog/TableOfContents.tsx';
+import '../../components/blog/BlogStyles.css';
+
+export async function getStaticPaths() {
+  const allPosts = await getVisibleBlogPosts();
+  const { getCategorySlug } = await getBlogCategories();
+
+  return allPosts.map((post) => ({
+    params: {
+      categorySlug: getCategorySlug(post.category),
+      postSlug: post.slug
+    },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { categoryMap, getCategorySlug } = await getBlogCategories();
+const categoryLabel = categoryMap[post.category] || post.category;
+const categorySlug = getCategorySlug(post.category);
+
+const allPosts = await getVisibleBlogPosts();
+const relatedPosts = allPosts
+  .filter(p => p.category === post.category && p.slug !== post.slug)
+  .slice(0, 3);
+---
+
+<BaseLayout
+  title={`${post.title} | Blog soosanmotor.com`}
+  description={post.description}
+>
+  <Layout client:load>
+    <article class="container mx-auto px-4 py-8">
+      <div class="max-w-4xl mx-auto">
+        <div class="mb-8">
+          <div class="flex items-center gap-4 text-sm text-gray-500 mb-4">
+            <a
+              href={`/danh-muc-bai-viet/${categorySlug}`}
+              class="bg-primary/10 text-primary px-3 py-1 rounded-full hover:bg-primary/20 transition"
+            >
+              {categoryLabel}
+            </a>
+            <time datetime={post.publishDate}>
+              {new Date(post.publishDate).toLocaleDateString('vi-VN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
+            </time>
+            <span>{post.readTime}</span>
+          </div>
+
+          <h1 class="text-4xl font-bold mb-4">{post.title}</h1>
+
+          <p class="text-xl text-gray-600 mb-6">
+            {post.description}
+          </p>
+
+          <div class="flex items-center gap-4 text-sm text-gray-600">
+            <span>Tác giả: {post.author}</span>
+          </div>
+        </div>
+
+        {post.images && post.images[0] && (
+          <div class="mb-8 rounded-lg overflow-hidden">
+            <OptimizedImage
+              client:load
+              src={post.images[0]}
+              alt={post.title}
+              className="w-full h-auto"
+              useCase="gallery"
+            />
+          </div>
+        )}
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          <div class="lg:col-span-3">
+            <div class="prose prose-lg max-w-none blog-content" set:html={post.content} />
+          </div>
+
+          <aside class="lg:col-span-1">
+            <div class="sticky top-8">
+              <TableOfContents client:load content={post.content} />
+            </div>
+          </aside>
+        </div>
+
+        {relatedPosts.length > 0 && (
+          <div class="mt-12 pt-8 border-t">
+            <h2 class="text-2xl font-bold mb-6">Bài viết liên quan</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {relatedPosts.map((relatedPost) => {
+                const relCategorySlug = getCategorySlug(relatedPost.category);
+                return (
+                  <a
+                    href={`/${relCategorySlug}/${relatedPost.slug}`}
+                    class="group"
+                  >
+                    <article class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition">
+                      {relatedPost.images && relatedPost.images[0] && (
+                        <OptimizedImage
+                          client:load
+                          src={relatedPost.images[0]}
+                          alt={relatedPost.title}
+                          className="w-full h-48 object-cover"
+                          useCase="thumbnail"
+                        />
+                      )}
+                      <div class="p-4">
+                        <h3 class="font-bold mb-2 group-hover:text-primary transition line-clamp-2">
+                          {relatedPost.title}
+                        </h3>
+                        <p class="text-sm text-gray-600 line-clamp-2">
+                          {relatedPost.description}
+                        </p>
+                      </div>
+                    </article>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+    </article>
+  </Layout>
+</BaseLayout>

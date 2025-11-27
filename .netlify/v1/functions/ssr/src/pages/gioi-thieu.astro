@@ -1,0 +1,140 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Layout from '../components/Layout.tsx';
+---
+
+<BaseLayout
+  title="Giới Thiệu | soosanmotor.com"
+  description="Tìm hiểu về soosanmotor.com - Nhà sản xuất và phân phối xe tải, cẩu, sơ mi rơ mooc, xe đầu kéo uy tín tại Việt Nam."
+>
+  <Layout client:load>
+    <div class="container mx-auto px-4 py-12">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-bold mb-8">Giới Thiệu Về Chúng Tôi</h1>
+
+        <div class="prose max-w-none">
+          <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-4">SOOSAN VINA MOTOR</h2>
+            <p class="text-lg text-gray-700 leading-relaxed mb-6">
+              Chúng tôi là nhà sản xuất và phân phối hàng đầu các loại xe thương mại tại Việt Nam,
+              chuyên cung cấp xe tải, xe cẩu, sơ mi rơ moóc, xe đầu kéo và các loại xe chuyên dụng khác.
+            </p>
+            <p class="text-lg text-gray-700 leading-relaxed mb-6">
+              Với nhiều năm kinh nghiệm trong ngành, chúng tôi tự hào mang đến cho khách hàng những sản phẩm
+              chất lượng cao từ các thương hiệu uy tín như Hyundai, Hino, Isuzu, Dongfeng, và nhiều thương hiệu khác.
+            </p>
+          </section>
+
+          <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6">Sản Phẩm & Dịch Vụ</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-gray-50 p-6 rounded-lg">
+                <h3 class="text-xl font-bold mb-3 text-primary">Xe Tải</h3>
+                <p class="text-gray-700">
+                  Đa dạng các loại xe tải từ 500kg đến 25 tấn, phù hợp cho mọi nhu cầu vận chuyển.
+                </p>
+              </div>
+
+              <div class="bg-gray-50 p-6 rounded-lg">
+                <h3 class="text-xl font-bold mb-3 text-primary">Xe Cẩu</h3>
+                <p class="text-gray-700">
+                  Cẩu Soosan, Kanglim chất lượng cao, đa dạng tải trọng từ 3 tấn đến 15 tấn.
+                </p>
+              </div>
+
+              <div class="bg-gray-50 p-6 rounded-lg">
+                <h3 class="text-xl font-bold mb-3 text-primary">Sơ Mi Rơ Moóc</h3>
+                <p class="text-gray-700">
+                  Moóc DOOSUNG, CIMC, KOKSAN chuyên dụng cho vận chuyển container và hàng hóa nặng.
+                </p>
+              </div>
+
+              <div class="bg-gray-50 p-6 rounded-lg">
+                <h3 class="text-xl font-bold mb-3 text-primary">Xe Đầu Kéo</h3>
+                <p class="text-gray-700">
+                  Đầu kéo Hyundai, Hino, HOWO mạnh mẽ, tiết kiệm nhiên liệu.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6">Cam Kết Của Chúng Tôi</h2>
+            <ul class="space-y-4">
+              <li class="flex items-start gap-3">
+                <svg class="w-6 h-6 text-green-500 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <div>
+                  <h3 class="font-bold mb-1">Sản phẩm chính hãng</h3>
+                  <p class="text-gray-700">100% xe chính hãng, có đầy đủ giấy tờ và bảo hành từ nhà sản xuất.</p>
+                </div>
+              </li>
+
+              <li class="flex items-start gap-3">
+                <svg class="w-6 h-6 text-green-500 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <div>
+                  <h3 class="font-bold mb-1">Giá cạnh tranh nhất</h3>
+                  <p class="text-gray-700">Cam kết giá tốt nhất thị trường, hỗ trợ trả góp lãi suất thấp.</p>
+                </div>
+              </li>
+
+              <li class="flex items-start gap-3">
+                <svg class="w-6 h-6 text-green-500 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <div>
+                  <h3 class="font-bold mb-1">Dịch vụ sau bán hàng</h3>
+                  <p class="text-gray-700">Hỗ trợ bảo hành, bảo dưỡng định kỳ, cung cấp phụ tùng chính hãng.</p>
+                </div>
+              </li>
+
+              <li class="flex items-start gap-3">
+                <svg class="w-6 h-6 text-green-500 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <div>
+                  <h3 class="font-bold mb-1">Tư vấn chuyên nghiệp</h3>
+                  <p class="text-gray-700">Đội ngũ nhân viên giàu kinh nghiệm, nhiệt tình tư vấn 24/7.</p>
+                </div>
+              </li>
+            </ul>
+          </section>
+
+          <section class="bg-primary/5 p-8 rounded-lg">
+            <h2 class="text-2xl font-bold mb-4">Liên Hệ Với Chúng Tôi</h2>
+            <div class="space-y-3">
+              <p class="flex items-center gap-3">
+                <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path>
+                </svg>
+                <strong>Hotline:</strong>
+                <a href="tel:0764678901" class="text-primary hover:underline">0764 6789 01</a>
+              </p>
+
+              <p class="flex items-center gap-3">
+                <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                </svg>
+                <strong>Email:</strong>
+                <a href="mailto:sales@soosanmotor.com" class="text-primary hover:underline">sales@soosanmotor.com</a>
+              </p>
+            </div>
+
+            <div class="mt-6">
+              <a
+                href="/lien-he"
+                class="inline-block bg-primary text-white px-8 py-3 rounded-lg hover:bg-primary-700 transition font-medium"
+              >
+                Gửi yêu cầu tư vấn
+              </a>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </Layout>
+</BaseLayout>

@@ -18,32 +18,44 @@ export const GET: APIRoute = async ({ url }) => {
     ]);
 
     const productResults = products
-      .filter(product =>
-        product.data.name.toLowerCase().includes(query) ||
-        product.data.brand?.toLowerCase().includes(query) ||
-        product.data.description?.toLowerCase().includes(query)
-      )
+      .filter(product => !product.data.isHidden)
+      .filter(product => {
+        const name = product.data.name?.toLowerCase() || '';
+        const brand = product.data.brand?.toLowerCase() || '';
+        const description = product.data.description?.toLowerCase() || '';
+        const model = product.data.model?.toLowerCase() || '';
+
+        return name.includes(query) ||
+          brand.includes(query) ||
+          description.includes(query) ||
+          model.includes(query);
+      })
       .slice(0, 5)
       .map(product => ({
         id: product.id,
         title: product.data.name,
         type: 'product' as const,
-        url: `/${product.data.type}/${product.slug}`,
+        url: `/${product.data.type}/${product.data.slug || product.slug}`,
         excerpt: product.data.description?.substring(0, 100)
       }));
 
     const blogResults = blogPosts
-      .filter(post =>
-        post.data.title.toLowerCase().includes(query) ||
-        post.data.description?.toLowerCase().includes(query) ||
-        post.data.excerpt?.toLowerCase().includes(query)
-      )
+      .filter(post => !post.data.isHidden)
+      .filter(post => {
+        const title = post.data.title?.toLowerCase() || '';
+        const description = post.data.description?.toLowerCase() || '';
+        const excerpt = post.data.excerpt?.toLowerCase() || '';
+
+        return title.includes(query) ||
+          description.includes(query) ||
+          excerpt.includes(query);
+      })
       .slice(0, 5)
       .map(post => ({
         id: post.id,
         title: post.data.title,
         type: 'blog' as const,
-        url: `/${post.data.category}/${post.slug}`,
+        url: `/${post.data.category}/${post.data.slug || post.slug}`,
         excerpt: post.data.excerpt?.substring(0, 100) || post.data.description?.substring(0, 100)
       }));
 
