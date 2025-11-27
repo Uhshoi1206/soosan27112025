@@ -17,6 +17,16 @@ interface SearchDropdownProps {
   onResultClick?: () => void;
 }
 
+const removeVietnameseTones = (str: string): string => {
+  if (!str) return '';
+  return str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+    .toLowerCase();
+};
+
 const SearchDropdown: React.FC<SearchDropdownProps> = ({
   placeholder = "Tìm kiếm xe, tin tức...",
   className,
@@ -26,8 +36,34 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchData, setSearchData] = useState<any>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Load search data once on mount
+  useEffect(() => {
+    const loadSearchData = async () => {
+      try {
+        // Try to get data from window object (injected by Astro)
+        if ((window as any).__SEARCH_DATA__) {
+          setSearchData((window as any).__SEARCH_DATA__);
+          return;
+        }
+
+        // Fallback: fetch from API
+        const response = await fetch('/api/search-data.json');
+        if (response.ok) {
+          const data = await response.json();
+          setSearchData(data);
+          (window as any).__SEARCH_DATA__ = data;
+        }
+      } catch (error) {
+        console.error('Failed to load search data:', error);
+      }
+    };
+
+    loadSearchData();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -41,10 +77,15 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
   }, []);
 
   useEffect(() => {
-    const searchContent = async () => {
-      if (!searchTerm.trim()) {
+    const searchContent = () => {
+      if (!searchTerm.trim() || searchTerm.length < 2) {
         setResults([]);
         setIsOpen(false);
+        return;
+      }
+
+      if (!searchData) {
+        setIsLoading(true);
         return;
       }
 
@@ -52,15 +93,63 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
       setIsOpen(true);
 
       try {
-        const response = await fetch(`/api/search?q=${encodeURIComponent(searchTerm)}`);
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Search API response:', data);
-          setResults(data.results || []);
-        } else {
-          console.error('Search API error:', response.status, response.statusText);
-          setResults([]);
+        const query = removeVietnameseTones(searchTerm.trim());
+        const foundResults: SearchResult[] = [];
+
+        // Search products
+        if (searchData.products) {
+          searchData.products.forEach((product: any) => {
+            const name = removeVietnameseTones(product.name || '');
+            const brand = removeVietnameseTones(product.brand || '');
+            const model = removeVietnameseTones(product.model || '');
+            const description = removeVietnameseTones(product.description || '');
+
+            if (name.includes(query) ||
+                brand.includes(query) ||
+                model.includes(query) ||
+                description.includes(query)) {
+              foundResults.push({
+                id: product.id,
+                title: product.name,
+                type: 'product',
+                url: `/${product.type}/${product.slug}`,
+                excerpt: product.description?.substring(0, 100)
+              });
+            }
+          });
         }
+
+        // Search blogs
+        if (searchData.blogs) {
+          searchData.blogs.forEach((blog: any) => {
+            const title = removeVietnameseTones(blog.title || '');
+            const description = removeVietnameseTones(blog.description || '');
+            const excerpt = removeVietnameseTones(blog.excerpt || '');
+
+            if (title.includes(query) ||
+                description.includes(query) ||
+                excerpt.includes(query)) {
+              foundResults.push({
+                id: blog.id,
+                title: blog.title,
+                type: 'blog',
+                url: `/${blog.category}/${blog.slug}`,
+                excerpt: blog.excerpt?.substring(0, 100) || blog.description?.substring(0, 100)
+              });
+            }
+          });
+        }
+
+        // Sort results - exact matches first
+        foundResults.sort((a, b) => {
+          const aExactMatch = removeVietnameseTones(a.title) === query;
+          const bExactMatch = removeVietnameseTones(b.title) === query;
+          if (aExactMatch && !bExactMatch) return -1;
+          if (!aExactMatch && bExactMatch) return 1;
+          return 0;
+        });
+
+        setResults(foundResults.slice(0, 10));
       } catch (error) {
         console.error('Search error:', error);
         setResults([]);
@@ -71,7 +160,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
 
     const timeoutId = setTimeout(searchContent, 300);
     return () => clearTimeout(timeoutId);
-  }, [searchTerm]);
+  }, [searchTerm, searchData]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,7 +187,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           onFocus={() => {
-            if (searchTerm.trim() && results.length > 0) {
+            if (searchTerm.trim().length >= 2 && results.length > 0) {
               setIsOpen(true);
             }
           }}
@@ -106,12 +195,12 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
         />
       </form>
 
-      {isOpen && searchTerm.trim() && (
+      {isOpen && searchTerm.trim().length >= 2 && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg max-h-96 overflow-y-auto z-50">
           {isLoading ? (
             <div className="p-4 text-center text-gray-500">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto"></div>
-              <p className="mt-2 text-sm">Đang tìm kiếm...</p>
+              <div className="animate-spin h-6 w-6 border-2 border-primary border-t-transparent rounded-full mx-auto mb-2"></div>
+              <p className="text-sm">Đang tìm kiếm...</p>
             </div>
           ) : results.length > 0 ? (
             <div>
