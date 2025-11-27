@@ -11,27 +11,47 @@ interface SearchResultsProps {
   searchQuery: string;
 }
 
+const removeVietnameseTones = (str: string): string => {
+  if (!str) return '';
+  return str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+    .toLowerCase();
+};
+
 const SearchResults: React.FC<SearchResultsProps> = ({ products, blogPosts, searchQuery }) => {
   const filteredProducts = useMemo(() => {
     if (!searchQuery) return products;
 
-    const query = searchQuery.toLowerCase();
-    return products.filter(product =>
-      product.name.toLowerCase().includes(query) ||
-      product.brand?.toLowerCase().includes(query) ||
-      product.description?.toLowerCase().includes(query)
-    );
+    const query = removeVietnameseTones(searchQuery);
+    return products.filter(product => {
+      const name = removeVietnameseTones(product.name || '');
+      const brand = removeVietnameseTones(product.brand || '');
+      const description = removeVietnameseTones(product.description || '');
+      const model = removeVietnameseTones(product.model || '');
+
+      return name.includes(query) ||
+        brand.includes(query) ||
+        description.includes(query) ||
+        model.includes(query);
+    });
   }, [products, searchQuery]);
 
   const filteredBlogPosts = useMemo(() => {
     if (!searchQuery) return blogPosts;
 
-    const query = searchQuery.toLowerCase();
-    return blogPosts.filter(post =>
-      post.title.toLowerCase().includes(query) ||
-      post.description?.toLowerCase().includes(query) ||
-      post.excerpt?.toLowerCase().includes(query)
-    );
+    const query = removeVietnameseTones(searchQuery);
+    return blogPosts.filter(post => {
+      const title = removeVietnameseTones(post.title || '');
+      const description = removeVietnameseTones(post.description || '');
+      const excerpt = removeVietnameseTones(post.excerpt || '');
+
+      return title.includes(query) ||
+        description.includes(query) ||
+        excerpt.includes(query);
+    });
   }, [blogPosts, searchQuery]);
 
   const totalResults = filteredProducts.length + filteredBlogPosts.length;
