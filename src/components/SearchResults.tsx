@@ -1,0 +1,130 @@
+import React, { useMemo } from 'react';
+import { Package, FileText } from 'lucide-react';
+import TruckItem from './TruckItem';
+import { Card, CardContent, CardHeader } from './ui/card';
+import type { Truck } from '@/models/TruckTypes';
+import type { BlogPost } from '@/models/BlogPost';
+
+interface SearchResultsProps {
+  products: Truck[];
+  blogPosts: BlogPost[];
+  searchQuery: string;
+}
+
+const SearchResults: React.FC<SearchResultsProps> = ({ products, blogPosts, searchQuery }) => {
+  const filteredProducts = useMemo(() => {
+    if (!searchQuery) return products;
+
+    const query = searchQuery.toLowerCase();
+    return products.filter(product =>
+      product.name.toLowerCase().includes(query) ||
+      product.brand?.toLowerCase().includes(query) ||
+      product.description?.toLowerCase().includes(query)
+    );
+  }, [products, searchQuery]);
+
+  const filteredBlogPosts = useMemo(() => {
+    if (!searchQuery) return blogPosts;
+
+    const query = searchQuery.toLowerCase();
+    return blogPosts.filter(post =>
+      post.title.toLowerCase().includes(query) ||
+      post.description?.toLowerCase().includes(query) ||
+      post.excerpt?.toLowerCase().includes(query)
+    );
+  }, [blogPosts, searchQuery]);
+
+  const totalResults = filteredProducts.length + filteredBlogPosts.length;
+
+  return (
+    <div className="space-y-8">
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <p className="text-gray-700">
+          Tìm thấy <span className="font-bold text-primary">{totalResults}</span> kết quả
+          {filteredProducts.length > 0 && (
+            <span> ({filteredProducts.length} sản phẩm</span>
+          )}
+          {filteredProducts.length > 0 && filteredBlogPosts.length > 0 && ', '}
+          {filteredBlogPosts.length > 0 && (
+            <span>{filteredBlogPosts.length} tin tức</span>
+          )}
+          {(filteredProducts.length > 0 || filteredBlogPosts.length > 0) && ')'}
+        </p>
+      </div>
+
+      {totalResults === 0 && (
+        <div className="text-center py-12">
+          <div className="text-gray-400 mb-4">
+            <Package className="h-16 w-16 mx-auto" />
+          </div>
+          <h3 className="text-xl font-semibold text-gray-700 mb-2">
+            Không tìm thấy kết quả
+          </h3>
+          <p className="text-gray-500">
+            Không có sản phẩm hoặc tin tức nào phù hợp với từ khóa "{searchQuery}"
+          </p>
+        </div>
+      )}
+
+      {filteredProducts.length > 0 && (
+        <div>
+          <div className="flex items-center gap-2 mb-4">
+            <Package className="h-5 w-5 text-primary" />
+            <h2 className="text-2xl font-bold text-gray-800">
+              Sản phẩm ({filteredProducts.length})
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredProducts.map((product) => (
+              <TruckItem key={product.id} truck={product} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {filteredBlogPosts.length > 0 && (
+        <div>
+          <div className="flex items-center gap-2 mb-4">
+            <FileText className="h-5 w-5 text-blue-500" />
+            <h2 className="text-2xl font-bold text-gray-800">
+              Tin tức ({filteredBlogPosts.length})
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredBlogPosts.map((post) => (
+              <Card key={post.slug} className="hover:shadow-lg transition-shadow">
+                <a href={`/${post.category}/${post.slug}`}>
+                  {post.image && (
+                    <div className="aspect-video overflow-hidden rounded-t-lg">
+                      <img
+                        src={post.image}
+                        alt={post.title}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                  )}
+                  <CardHeader>
+                    <h3 className="font-semibold text-lg line-clamp-2 hover:text-primary transition-colors">
+                      {post.title}
+                    </h3>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 text-sm line-clamp-3 mb-4">
+                      {post.excerpt || post.description}
+                    </p>
+                    <div className="flex items-center justify-between text-sm text-gray-500">
+                      <span>{new Date(post.publishDate).toLocaleDateString('vi-VN')}</span>
+                      <span className="text-primary hover:underline">Đọc thêm →</span>
+                    </div>
+                  </CardContent>
+                </a>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default SearchResults;

@@ -1,34 +1,47 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Layout from '../components/Layout.tsx';
-import CatalogHeader from '../components/catalog/CatalogHeader.tsx';
-import CatalogPage from '../components/catalog/CatalogPage.tsx';
+import SearchResults from '../components/SearchResults.tsx';
 import { getVisibleProducts } from '../utils/contentCollections';
+import { getCollection } from 'astro:content';
 
 const visibleTrucks = await getVisibleProducts();
+const allBlogPosts = await getCollection('blog');
 
-// Get search query from URL
+const blogPosts = allBlogPosts.map(post => ({
+  slug: post.slug,
+  title: post.data.title,
+  description: post.data.description,
+  excerpt: post.data.excerpt,
+  category: post.data.category,
+  publishDate: post.data.publishDate,
+  image: post.data.image
+}));
+
 const url = Astro.url;
 const searchQuery = url.searchParams.get('q') || '';
 ---
 
 <BaseLayout
-  title={searchQuery ? `Tìm kiếm: ${searchQuery} | soosanmotor.com` : "Tìm kiếm xe | soosanmotor.com"}
-  description={`Kết quả tìm kiếm cho "${searchQuery}". Tìm xe tải, xe cẩu, sơ mi rơ mooc, xe đầu kéo phù hợp với nhu cầu của bạn.`}
+  title={searchQuery ? `Tìm kiếm: ${searchQuery} | soosanmotor.com` : "Tìm kiếm | soosanmotor.com"}
+  description={`Kết quả tìm kiếm cho "${searchQuery}". Tìm xe tải, xe cẩu, sơ mi rơ mooc, đầu kéo và tin tức phù hợp với nhu cầu của bạn.`}
 >
   <Layout client:load>
     <div class="container mx-auto px-4 py-8">
       {searchQuery && (
-        <div class="mb-6">
-          <h1 class="text-3xl font-bold text-gray-800">
+        <div class="mb-8">
+          <h1 class="text-3xl md:text-4xl font-bold text-gray-800">
             Kết quả tìm kiếm cho: <span class="text-primary">"{searchQuery}"</span>
           </h1>
         </div>
       )}
 
-      <CatalogHeader client:load initialVehicleCount={visibleTrucks.length} />
-
-      <CatalogPage client:load initialVehicles={visibleTrucks} initialSearchQuery={searchQuery} />
+      <SearchResults
+        client:load
+        products={visibleTrucks}
+        blogPosts={blogPosts}
+        searchQuery={searchQuery}
+      />
     </div>
   </Layout>
 </BaseLayout>

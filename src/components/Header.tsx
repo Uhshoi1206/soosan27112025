@@ -4,8 +4,8 @@ import { Search, Phone, Calculator, CreditCard, GitCompare } from 'lucide-react'
 import { Button } from './ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import MobileMenu from './MobileMenu';
-import { Input } from './ui/input';
-import { 
+import SearchDropdown from './SearchDropdown';
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -15,17 +15,8 @@ import { useCompare } from '@/contexts/CompareContextAstro';
 
 const Header: React.FC = () => {
   const isMobile = useIsMobile();
-  const [searchTerm, setSearchTerm] = useState('');
   const [open, setOpen] = useState(false);
   const { generateCompareUrl } = useCompare();
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      window.location.href = `/search?q=${encodeURIComponent(searchTerm)}`;
-      setOpen(false);
-    }
-  };
 
   const handleCompareClick = () => {
     const compareUrl = generateCompareUrl();
@@ -107,17 +98,8 @@ const Header: React.FC = () => {
                     Tìm kiếm
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-80 p-0" align="end">
-                  <form onSubmit={handleSearch} className="flex p-2">
-                    <Input 
-                      placeholder="Nhập từ khóa tìm kiếm..." 
-                      className="mr-2"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      autoFocus
-                    />
-                    <Button type="submit" size="sm">Tìm</Button>
-                  </form>
+                <PopoverContent className="w-96 p-4" align="end">
+                  <SearchDropdown onResultClick={() => setOpen(false)} />
                 </PopoverContent>
               </Popover>
             ) : (

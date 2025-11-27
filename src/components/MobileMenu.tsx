@@ -2,23 +2,15 @@
 import React, { useState } from 'react';
 import { Button } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
-import { Search, GitCompare, Calculator, CreditCard } from 'lucide-react';
+import { GitCompare, Calculator, CreditCard } from 'lucide-react';
 import CompareBadge from './CompareBadge';
+import SearchDropdown from './SearchDropdown';
 import { useCompare } from '@/contexts/CompareContextAstro';
 
 const MobileMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  
-  const { generateCompareUrl } = useCompare();
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      window.location.href = `/search?q=${encodeURIComponent(searchTerm)}`;
-      setIsOpen(false);
-    }
-  };
+  const { generateCompareUrl } = useCompare();
   
   const handleCompareClick = () => {
     const compareUrl = generateCompareUrl();
@@ -55,16 +47,10 @@ const MobileMenu: React.FC = () => {
           </div>
           
           <div className="mb-6">
-            <form onSubmit={handleSearch} className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
-              <input
-                type="search"
-                placeholder="Tìm kiếm xe tải..."
-                className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </form>
+            <SearchDropdown
+              placeholder="Tìm kiếm xe, tin tức..."
+              onResultClick={() => setIsOpen(false)}
+            />
           </div>
 
           <nav className="flex flex-col space-y-3">
