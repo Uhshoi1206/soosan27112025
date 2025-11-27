@@ -8,20 +8,29 @@ import TruckItem from '../components/TruckItem';
 import { getVisibleProducts } from '../utils/contentCollections';
 import { getCollection } from 'astro:content';
 
-const visibleTrucks = await getVisibleProducts();
-const allBlogPosts = await getCollection('blog');
+let visibleTrucks = [];
+let blogPosts = [];
+let errorMessage = '';
 
-const blogPosts = allBlogPosts
-  .filter(post => !post.data.isHidden)
-  .map(post => ({
-    slug: post.slug,
-    title: post.data.title,
-    description: post.data.description,
-    excerpt: post.data.excerpt,
-    category: post.data.category,
-    publishDate: post.data.publishDate,
-    image: post.data.image
-  }));
+try {
+  visibleTrucks = await getVisibleProducts() || [];
+  const allBlogPosts = await getCollection('blog') || [];
+
+  blogPosts = allBlogPosts
+    .filter(post => post?.data && !post.data.isHidden)
+    .map(post => ({
+      slug: post.slug || post.id,
+      title: post.data.title || '',
+      description: post.data.description || '',
+      excerpt: post.data.excerpt || '',
+      category: post.data.category || '',
+      publishDate: post.data.publishDate || new Date(),
+      image: post.data.image || ''
+    }));
+} catch (error) {
+  console.error('[search.astro] Error loading data:', error);
+  errorMessage = error instanceof Error ? error.message : 'Unknown error';
+}
 
 const url = Astro.url;
 const searchQuery = url.searchParams.get('q') || '';
@@ -38,26 +47,36 @@ function removeVietnameseTones(str: string): string {
 
 const normalizedQuery = removeVietnameseTones(searchQuery);
 
-const filteredProducts = searchQuery ? visibleTrucks.filter(product => {
-  const name = removeVietnameseTones(product.name || '');
-  const brand = removeVietnameseTones(product.brand || '');
-  const description = removeVietnameseTones(product.description || '');
-  const model = removeVietnameseTones(product.model || '');
+const filteredProducts = searchQuery && visibleTrucks.length > 0 ? visibleTrucks.filter(product => {
+  try {
+    const name = removeVietnameseTones(product?.name || '');
+    const brand = removeVietnameseTones(product?.brand || '');
+    const description = removeVietnameseTones(product?.description || '');
+    const model = removeVietnameseTones(product?.model || '');
 
-  return name.includes(normalizedQuery) ||
-    brand.includes(normalizedQuery) ||
-    description.includes(normalizedQuery) ||
-    model.includes(normalizedQuery);
+    return name.includes(normalizedQuery) ||
+      brand.includes(normalizedQuery) ||
+      description.includes(normalizedQuery) ||
+      model.includes(normalizedQuery);
+  } catch (e) {
+    console.error('[search.astro] Error filtering product:', e);
+    return false;
+  }
 }) : visibleTrucks;
 
-const filteredBlogPosts = searchQuery ? blogPosts.filter(post => {
-  const title = removeVietnameseTones(post.title || '');
-  const description = removeVietnameseTones(post.description || '');
-  const excerpt = removeVietnameseTones(post.excerpt || '');
+const filteredBlogPosts = searchQuery && blogPosts.length > 0 ? blogPosts.filter(post => {
+  try {
+    const title = removeVietnameseTones(post?.title || '');
+    const description = removeVietnameseTones(post?.description || '');
+    const excerpt = removeVietnameseTones(post?.excerpt || '');
 
-  return title.includes(normalizedQuery) ||
-    description.includes(normalizedQuery) ||
-    excerpt.includes(normalizedQuery);
+    return title.includes(normalizedQuery) ||
+      description.includes(normalizedQuery) ||
+      excerpt.includes(normalizedQuery);
+  } catch (e) {
+    console.error('[search.astro] Error filtering post:', e);
+    return false;
+  }
 }) : blogPosts;
 
 const totalResults = filteredProducts.length + filteredBlogPosts.length;
@@ -86,6 +105,14 @@ console.log('[search.astro] Search results:', {
           <h1 class="text-3xl md:text-4xl font-bold text-gray-800">
             Kết quả tìm kiếm cho: <span class="text-primary">"{searchQuery}"</span>
           </h1>
+        </div>
+      )}
+
+      {errorMessage && (
+        <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-8">
+          <p class="text-red-700">
+            Đã xảy ra lỗi khi tải dữ liệu: {errorMessage}
+          </p>
         </div>
       )}
 
